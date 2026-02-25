@@ -37,7 +37,6 @@ interface EmotionContent {
     excerpt: string;
     analysis: string;
   };
-  practicalContext: string;
 }
 
 async function generateEmotionContent(pastEmotions: string[]): Promise<EmotionContent> {
@@ -72,8 +71,7 @@ Return ONLY valid JSON with exactly this structure, no other text:
     "author": "author's full name",
     "excerpt": "an accurate, real quote or passage (1-4 lines) from the work that evokes this emotion",
     "analysis": "2-3 sentences on how the author channels this emotion and what a reader can learn from it"
-  },
-  "practicalContext": "1-2 sentences on how recognizing this emotion in yourself or others can be useful in daily life"
+  }
 }`,
       },
     ],
@@ -147,18 +145,6 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
           <tr>
             <td style="padding-top:20px;padding-bottom:40px;border-bottom:1px solid #2a2a35;">
               <p style="margin:0;font-size:15px;line-height:1.75;color:#b8aec8;">${content.literaryExample.analysis}</p>
-            </td>
-          </tr>
-
-          <!-- Why It Matters -->
-          <tr>
-            <td style="padding-top:40px;padding-bottom:16px;">
-              <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7b6f8e;font-family:'Helvetica Neue',sans-serif;">why it matters</p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding-bottom:40px;border-bottom:1px solid #2a2a35;">
-              <p style="margin:0;font-size:16px;line-height:1.8;color:#b8aec8;">${content.practicalContext}</p>
             </td>
           </tr>
 
