@@ -162,6 +162,15 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
             </td>
           </tr>
 
+          <!-- Emotional Granularity Note -->
+          <tr>
+            <td style="padding-top:40px;padding-bottom:40px;border-bottom:1px solid #2a2a35;">
+              <p style="margin:0 0 8px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7b6f8e;font-family:'Helvetica Neue',sans-serif;">why this practice matters</p>
+              <p style="margin:0;font-size:13px;line-height:1.75;color:#6a6178;font-family:'Helvetica Neue',sans-serif;">Research by neuroscientist <span style="color:#9b8aaa;">Lisa Feldman Barrett</span> shows that people with higher <em>emotional granularity</em> — the ability to distinguish and label emotions with precision — experience better emotional regulation, lower anxiety, and greater psychological resilience. The simple act of naming what you feel, specifically, changes how your brain processes it.</p>
+              <p style="margin:10px 0 0;font-size:11px;color:#4a4a5a;font-family:'Helvetica Neue',sans-serif;">Barrett, L.F. et al. — <em>Knowing what you're feeling and knowing what to do about it.</em> Cognition &amp; Emotion, 2001.</p>
+            </td>
+          </tr>
+
           <!-- Footer -->
           <tr>
             <td style="padding-top:32px;padding-bottom:40px;">
