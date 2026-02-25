@@ -178,10 +178,13 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
 }
 
 async function main() {
-  const recipientEmail = process.env.RECIPIENT_EMAIL;
+  const recipientEmails = (process.env.RECIPIENT_EMAIL ?? '')
+    .split(',')
+    .map((e) => e.trim())
+    .filter(Boolean);
   const fromEmail = process.env.FROM_EMAIL ?? 'EmoMail <onboarding@resend.dev>';
 
-  if (!recipientEmail) {
+  if (recipientEmails.length === 0) {
     throw new Error('RECIPIENT_EMAIL environment variable is required');
   }
 
@@ -204,7 +207,7 @@ async function main() {
   console.log('Sending email...');
   const { data, error } = await resend.emails.send({
     from: fromEmail,
-    to: recipientEmail,
+    to: recipientEmails,
     subject: `EmoMail: ${content.emotion} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
     html,
   });
