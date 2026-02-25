@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import Anthropic from '@anthropic-ai/sdk';
@@ -83,7 +84,8 @@ Return ONLY valid JSON with exactly this structure, no other text:
     throw new Error('Unexpected response type from Claude');
   }
 
-  return JSON.parse(content.text) as EmotionContent;
+  const text = content.text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
+  return JSON.parse(text) as EmotionContent;
 }
 
 function buildEmailHtml(content: EmotionContent, date: string): string {
