@@ -159,8 +159,9 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
 
           <!-- Footer -->
           <tr>
-            <td style="padding-top:32px;padding-bottom:40px;">
-              <p style="margin:0;font-size:12px;color:#4a4a5a;font-family:'Helvetica Neue',sans-serif;text-align:center;">EmoMail — a daily letter for emotional vocabulary</p>
+            <td style="padding-top:32px;padding-bottom:40px;text-align:center;">
+              <p style="margin:0 0 10px;font-size:12px;color:#4a4a5a;font-family:'Helvetica Neue',sans-serif;">EmoMail — a daily letter for emotional vocabulary</p>
+              <p style="margin:0;font-size:12px;color:#4a4a5a;font-family:'Helvetica Neue',sans-serif;">Want to process what you're feeling? Try <a href="https://www.mindful-companion.com" style="color:#9b8aaa;text-decoration:none;">Mindful Companion</a> — an AI journaling app that offers validation and support.</p>
             </td>
           </tr>
 
