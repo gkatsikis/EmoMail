@@ -1,5 +1,28 @@
+import fs from 'fs';
+import path from 'path';
 import Anthropic from '@anthropic-ai/sdk';
 import { Resend } from 'resend';
+
+const HISTORY_FILE = path.resolve('history.json');
+
+interface HistoryEntry {
+  emotion: string;
+  date: string;
+}
+
+function readHistory(): string[] {
+  if (!fs.existsSync(HISTORY_FILE)) return [];
+  const entries: HistoryEntry[] = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf-8'));
+  return entries.map((e) => e.emotion);
+}
+
+function appendToHistory(emotion: string): void {
+  const existing: HistoryEntry[] = fs.existsSync(HISTORY_FILE)
+    ? JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf-8'))
+    : [];
+  existing.push({ emotion, date: new Date().toISOString().split('T')[0] });
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify(existing, null, 2) + '\n');
+}
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -16,13 +39,18 @@ interface EmotionContent {
   practicalContext: string;
 }
 
-async function generateEmotionContent(): Promise<EmotionContent> {
+async function generateEmotionContent(pastEmotions: string[]): Promise<EmotionContent> {
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
+
+  const avoidClause =
+    pastEmotions.length > 0
+      ? `\n\nThese emotions have already been used — do NOT repeat any of them:\n${pastEmotions.join(', ')}\n`
+      : '';
 
   const message = await anthropic.messages.create({
     model: 'claude-opus-4-6',
@@ -32,7 +60,7 @@ async function generateEmotionContent(): Promise<EmotionContent> {
         role: 'user',
         content: `Today is ${today}. Generate an "emotion of the day" for a daily newsletter focused on emotional intelligence and literary appreciation.
 
-Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "sad". Prefer emotions like "saudade", "hiraeth", "liminal anticipation", "bittersweet nostalgia", "wabi-sabi acceptance", "sublime awe", "productive melancholy", "effusive warmth", "quiet dread", etc. Foreign-language emotion words with no English equivalent are welcome but not required.
+Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "sad". Prefer emotions like "saudade", "hiraeth", "liminal anticipation", "bittersweet nostalgia", "wabi-sabi acceptance", "sublime awe", "productive melancholy", "effusive warmth", "quiet dread", etc. Foreign-language emotion words with no English equivalent are welcome but not required.${avoidClause}
 
 Return ONLY valid JSON with exactly this structure, no other text:
 {
@@ -155,8 +183,11 @@ async function main() {
     throw new Error('RECIPIENT_EMAIL environment variable is required');
   }
 
+  const pastEmotions = readHistory();
+  console.log(`History: ${pastEmotions.length} emotion(s) used so far.`);
+
   console.log('Generating emotion content...');
-  const content = await generateEmotionContent();
+  const content = await generateEmotionContent(pastEmotions);
   console.log(`Today's emotion: ${content.emotion}`);
 
   const date = new Date().toLocaleDateString('en-US', {
@@ -181,6 +212,8 @@ async function main() {
   }
 
   console.log(`Email sent successfully! ID: ${data?.id}`);
+  appendToHistory(content.emotion);
+  console.log(`Logged "${content.emotion}" to history.`);
 }
 
 main().catch((err) => {
