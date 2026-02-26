@@ -200,19 +200,24 @@ async function main() {
 
   const html = buildEmailHtml(content, date);
 
-  console.log('Sending email...');
-  const { data, error } = await resend.emails.send({
-    from: fromEmail,
-    to: recipientEmails,
-    subject: `EmoMail: ${content.emotion} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
-    html,
-  });
+  const subject = `EmoMail: ${content.emotion} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 
-  if (error) {
-    throw new Error(`Failed to send email: ${JSON.stringify(error)}`);
+  console.log(`Sending email to ${recipientEmails.length} recipient(s)...`);
+  for (const recipient of recipientEmails) {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: recipient,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error(`Failed to send to ${recipient}: ${JSON.stringify(error)}`);
+      continue;
+    }
+
+    console.log(`Sent to ${recipient} — ID: ${data?.id}`);
   }
-
-  console.log(`Email sent successfully! ID: ${data?.id}`);
   appendToHistory(content.emotion);
   console.log(`Logged "${content.emotion}" to history.`);
 }
