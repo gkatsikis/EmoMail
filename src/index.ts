@@ -217,6 +217,9 @@ async function main() {
     }
 
     console.log(`Sent to ${recipient} — ID: ${data?.id}`);
+    if (recipientEmails.indexOf(recipient) < recipientEmails.length - 1) {
+      await new Promise((r) => setTimeout(r, 1000));
+    }
   }
   appendToHistory(content.emotion);
   console.log(`Logged "${content.emotion}" to history.`);
