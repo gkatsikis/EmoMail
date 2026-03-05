@@ -30,6 +30,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface EmotionContent {
   emotion: string;
+  pronunciation: string;
   description: string;
   literaryExample: {
     work: string;
@@ -65,6 +66,7 @@ Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "s
 Return ONLY valid JSON with exactly this structure, no other text:
 {
   "emotion": "the emotion name",
+  "pronunciation": "phonetic pronunciation guide using simple English syllables, e.g. 'sow-DAH-jee' or 'HEER-eyeth'. Capitalize the stressed syllable.",
   "description": "2-3 sentences describing what this emotion feels like, when it arises, and why it's worth noticing",
   "literaryExample": {
     "work": "title of the poem, novel, play, or story",
@@ -117,6 +119,7 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
           <tr>
             <td style="padding-bottom:24px;">
               <h1 style="margin:0;font-size:48px;color:#e8e0f0;font-weight:normal;font-style:italic;line-height:1.1;">${content.emotion}</h1>
+              <p style="margin:8px 0 0;font-size:14px;color:#7b6f8e;font-family:'Helvetica Neue',sans-serif;font-style:italic;letter-spacing:0.5px;">[ ${content.pronunciation} ]</p>
             </td>
           </tr>
           <tr>
