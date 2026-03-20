@@ -32,6 +32,8 @@ interface EmotionContent {
   emotion: string;
   pronunciation: string;
   description: string;
+  etymology: string;
+  culturalContext: string;
   literaryExample: {
     work: string;
     author: string;
@@ -68,6 +70,8 @@ Return ONLY valid JSON with exactly this structure, no other text:
   "emotion": "the emotion name",
   "pronunciation": "phonetic pronunciation guide using simple English syllables, e.g. 'sow-DAH-jee' or 'HEER-eyeth'. Capitalize the stressed syllable.",
   "description": "2-3 sentences describing what this emotion feels like, when it arises, and why it's worth noticing",
+  "etymology": "1-2 sentences on the linguistic origin of the word — what language it comes from, its root words, and how its meaning evolved",
+  "culturalContext": "1-2 sentences on the culture or tradition this emotion is most associated with and how it shows up in their daily life or worldview",
   "literaryExample": {
     "work": "title of the poem, novel, play, or story",
     "author": "author's full name",
@@ -125,6 +129,19 @@ function buildEmailHtml(content: EmotionContent, date: string): string {
           <tr>
             <td style="padding-bottom:40px;border-bottom:1px solid #2a2a35;">
               <p style="margin:0;font-size:16px;line-height:1.8;color:#b8aec8;">${content.description}</p>
+            </td>
+          </tr>
+
+          <!-- Etymology & Cultural Context -->
+          <tr>
+            <td style="padding-top:40px;padding-bottom:16px;">
+              <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7b6f8e;font-family:'Helvetica Neue',sans-serif;">origin &amp; culture</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-bottom:40px;border-bottom:1px solid #2a2a35;">
+              <p style="margin:0 0 12px;font-size:15px;line-height:1.75;color:#b8aec8;">${content.etymology}</p>
+              <p style="margin:0;font-size:15px;line-height:1.75;color:#b8aec8;">${content.culturalContext}</p>
             </td>
           </tr>
 
