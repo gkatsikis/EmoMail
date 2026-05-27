@@ -366,5 +366,9 @@
   {
     "emotion": "Zugunruhe",
     "date": "2026-05-26"
+  },
+  {
+    "emotion": "Sekundenschlaf",
+    "date": "2026-05-27"
   }
 ]
