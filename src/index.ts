@@ -64,7 +64,7 @@ async function generateEmotionContent(pastEmotions: string[]): Promise<EmotionCo
         role: 'user',
         content: `Today is ${today}. Generate an "emotion of the day" for a daily newsletter focused on emotional intelligence and literary appreciation.
 
-Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "sad". Prefer emotions like "saudade", "hiraeth", "liminal anticipation", "bittersweet nostalgia", "wabi-sabi acceptance", "sublime awe", "productive melancholy", "effusive warmth", "quiet dread", etc. Foreign-language emotion words with no English equivalent are welcome but not required.${avoidClause}
+Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "sad" and try to not recommend german words and favor words from central & south america as well as asia. Prefer emotions like "saudade", "hiraeth", "liminal anticipation", "bittersweet nostalgia", "wabi-sabi acceptance", "sublime awe", "productive melancholy", "effusive warmth", "quiet dread", etc. Foreign-language emotion words with no English equivalent are welcome but not required.${avoidClause}
 
 Return ONLY valid JSON with exactly this structure, no other text:
 {
