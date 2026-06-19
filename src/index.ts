@@ -56,13 +56,7 @@ async function generateEmotionContent(pastEmotions: string[]): Promise<EmotionCo
       ? `\n\nThese emotions have already been used — do NOT repeat any of them:\n${pastEmotions.join(', ')}\n`
       : '';
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    messages: [
-      {
-        role: 'user',
-        content: `Today is ${today}. Generate an "emotion of the day" for a daily newsletter focused on emotional intelligence and literary appreciation.
+  const prompt = `Today is ${today}. Generate an "emotion of the day" for a daily newsletter focused on emotional intelligence and literary appreciation.
 
 Choose a nuanced, specific emotion — avoid generic emotions like "happy" or "sad" and try to not recommend german words and favor words from central & south america as well as asia. Prefer emotions like "saudade", "hiraeth", "liminal anticipation", "bittersweet nostalgia", "wabi-sabi acceptance", "sublime awe", "productive melancholy", "effusive warmth", "quiet dread", etc. Foreign-language emotion words with no English equivalent are welcome but not required.${avoidClause}
 
@@ -80,18 +74,31 @@ Return ONLY valid JSON with exactly this structure, no other text:
     "excerpt": "an accurate, real quote or passage (1-4 lines) from the work that evokes this emotion",
     "analysis": "2-3 sentences on how the author channels this emotion and what a reader can learn from it"
   }
-}`,
-      },
-    ],
-  });
+}`;
 
-  const content = message.content[0];
-  if (content.type !== 'text') {
-    throw new Error('Unexpected response type from Claude');
+  let lastErr: unknown;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    const content = message.content[0];
+    if (content.type !== 'text') {
+      throw new Error('Unexpected response type from Claude');
+    }
+
+    const raw = content.text;
+    const text = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1);
+    try {
+      return JSON.parse(text) as EmotionContent;
+    } catch (err) {
+      lastErr = err;
+      console.error(`Parse failed (attempt ${attempt}/2). Raw text:\n`, raw);
+    }
   }
-
-  const text = content.text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
-  return JSON.parse(text) as EmotionContent;
+  throw lastErr;
 }
 
 function buildEmailHtml(content: EmotionContent, date: string): string {
