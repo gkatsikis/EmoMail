@@ -2,7 +2,7 @@ name: Daily EmoMail
 
 on:
   schedule:
-    - cron: '0 12 * * *' # 7:00 AM ET (UTC-5) / 12:00 PM UTC
+    - cron: '0 12 * * 0,3' # 7:00 AM ET (UTC-5) / 12:00 PM UTC, Sundays & Wednesdays
   workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
