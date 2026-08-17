@@ -233,6 +233,7 @@ async function main() {
   const subject = `EmoMail: ${content.emotion} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 
   console.log(`Sending email to ${recipientEmails.length} recipient(s)...`);
+  let sentCount = 0;
   for (const recipient of recipientEmails) {
     const { data, error } = await resend.emails.send({
       from: fromEmail,
@@ -246,11 +247,17 @@ async function main() {
       continue;
     }
 
+    sentCount++;
     console.log(`Sent to ${recipient} — ID: ${data?.id}`);
     if (recipientEmails.indexOf(recipient) < recipientEmails.length - 1) {
       await new Promise((r) => setTimeout(r, 1000));
     }
   }
+
+  if (sentCount === 0) {
+    throw new Error(`All ${recipientEmails.length} send(s) failed — not logging to history.`);
+  }
+
   appendToHistory(content.emotion);
   console.log(`Logged "${content.emotion}" to history.`);
 }
