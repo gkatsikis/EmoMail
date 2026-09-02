@@ -90,6 +90,7 @@ Return ONLY valid JSON with exactly this structure, no other text:
     }
 
     const raw = content.text;
+    console.log('Raw model output:\n', raw);
     const text = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1);
     try {
       return JSON.parse(text) as EmotionContent;
