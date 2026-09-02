@@ -3,11 +3,6 @@ name: Resend Fix
 
 on:
   workflow_dispatch:
-    inputs:
-      mode:
-        description: 'dump (print sent email) or send (resend corrected)'
-        required: true
-        default: 'dump'
 
 jobs:
   resend-fix:
@@ -21,8 +16,8 @@ jobs:
       - run: npm ci
       - name: Run fix script
         env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
-          MODE: ${{ inputs.mode }}
         run: npx ts-node scripts/resend-fix.ts
