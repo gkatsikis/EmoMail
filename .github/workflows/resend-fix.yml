@@ -1,0 +1,28 @@
+# ponytail: temporary workflow for the 2026-09-02 correction — delete after use
+name: Resend Fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dump (print sent email) or send (resend corrected)'
+        required: true
+        default: 'dump'
+
+jobs:
+  resend-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run fix script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+          MODE: ${{ inputs.mode }}
+        run: npx ts-node scripts/resend-fix.ts
